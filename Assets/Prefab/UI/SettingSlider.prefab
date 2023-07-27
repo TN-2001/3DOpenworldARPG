@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6454162186478191946}
   - component: {fileID: 6454162186478191945}
   m_Layer: 5
-  m_Name: Setting_Slider
+  m_Name: SettingSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ RectTransform:
   - {fileID: 6454162187242891817}
   - {fileID: 6454162187091167525}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
