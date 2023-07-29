@@ -1,18 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : StateMachine<PlayerController>
 {
     // コンポーネント
-    private Animator anim;
-    private CharacterController con;
-    private PlayerInput input;
+    private Animator anim = null;
+    private CharacterController con = null;
 
-    [SerializeField]
-    private GameUI gameUI;
     [SerializeField]
     private int hp;
     [SerializeField]
@@ -43,16 +39,20 @@ public class PlayerController : StateMachine<PlayerController>
     {
         anim = GetComponent<Animator>();
         con = GetComponent<CharacterController>();
-        input = GetComponent<PlayerInput>();
 
         attack.Initialize(gameObject);
         attackCollider = attack.gameObject.GetComponent<Collider>();
 
-        gameUI.InitialzeHpSlider(hp);
+        UIManager.I.gameUI.InitialzeHpSlider(hp);
         maxStamina = stamina;
-        gameUI.InitializeStaminaSlider(maxStamina);
+        UIManager.I.gameUI.InitializeStaminaSlider(maxStamina);
 
         ChangeState(new IdleState(this));
+    }
+
+    private void FixedUpdate()
+    {
+        OnUpdate();
     }
 
     private void OnExitRoll()
@@ -85,7 +85,7 @@ public class PlayerController : StateMachine<PlayerController>
 
         audioSource.PlayOneShot(hitSE);
         hp -= damage;
-        gameUI.SetHpSlider(hp);
+        UIManager.I.gameUI.SetHpSlider(hp);
 
         if (hp <= 0)
         {
@@ -127,19 +127,19 @@ public class PlayerController : StateMachine<PlayerController>
             {
                 m.stamina = m.maxStamina;
             }
-            m.gameUI.SetStaminaSlider(m.stamina);
+            UIManager.I.gameUI.SetStaminaSlider(m.stamina);
 
-            if (m.input.actions["Attack"].WasPressedThisFrame())
+            if (GameManager.I.Input.actions["Attack"].WasPerformedThisFrame())
             {
                 m.ChangeState(new PlayerController.AttackState(m));
                 return;
             }
-            else if (m.input.actions["Roll"].WasPressedThisFrame())
+            else if (GameManager.I.Input.actions["Roll"].WasPerformedThisFrame())
             {
                 m.ChangeState(new PlayerController.RollState(m));
                 return;
             }
-            else if (m.input.actions["Move"].ReadValue<Vector2>().magnitude != 0)
+            else if (GameManager.I.Input.actions["Move"].ReadValue<Vector2>().magnitude != 0)
             {
                 m.ChangeState(new PlayerController.MoveState(m));
                 return;
@@ -158,7 +158,7 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnEnter()
         {
-            move = m.input.actions["Move"].ReadValue<Vector2>();
+            move = GameManager.I.Input.actions["Move"].ReadValue<Vector2>();
 
             Quaternion horizontalRotation = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
             Vector3 dir = horizontalRotation * new Vector3(move.x, 0, move.y).normalized;
@@ -170,7 +170,7 @@ public class PlayerController : StateMachine<PlayerController>
             // 移動
             dir = new Vector3(dir.x, - m.gravity * Time.fixedDeltaTime, dir.z);
 
-            if (m.input.actions["Dash"].IsPressed() && m.stamina > 0)
+            if (GameManager.I.Input.actions["Dash"].IsPressed() && m.stamina > 0)
             {
                 m.con.Move(dir * m.runSpeed * Time.fixedDeltaTime);
                 m.anim.SetFloat("speed", 1, 0.1f, Time.fixedDeltaTime);
@@ -184,14 +184,14 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            move = m.input.actions["Move"].ReadValue<Vector2>();
+            move = GameManager.I.Input.actions["Move"].ReadValue<Vector2>();
 
-            if (m.input.actions["Attack"].WasPressedThisFrame())
+            if (GameManager.I.Input.actions["Attack"].WasPerformedThisFrame())
             {
                 m.ChangeState(new PlayerController.AttackState(m));
                 return;
             }
-            else if (m.input.actions["Roll"].WasPressedThisFrame())
+            else if (GameManager.I.Input.actions["Roll"].WasPerformedThisFrame())
             {
                 m.ChangeState(new PlayerController.RollState(m));
                 return;
@@ -212,7 +212,7 @@ public class PlayerController : StateMachine<PlayerController>
             // 移動
             dir = new Vector3(dir.x, - m.gravity * Time.fixedDeltaTime, dir.z);
 
-            if (m.input.actions["Dash"].IsPressed() && m.stamina > 0 && m.isStamina)
+            if (GameManager.I.Input.actions["Dash"].IsPressed() && m.stamina > 0 && m.isStamina)
             {
                 m.con.Move(dir * m.runSpeed * Time.fixedDeltaTime);
                 m.anim.SetFloat("speed", 1, 0.1f, Time.fixedDeltaTime);
@@ -222,7 +222,7 @@ public class PlayerController : StateMachine<PlayerController>
                 {
                     m.isStamina = false;
                 }
-                m.gameUI.SetStaminaSlider(m.stamina);
+                UIManager.I.gameUI.SetStaminaSlider(m.stamina);
             }
             else
             {
@@ -242,7 +242,7 @@ public class PlayerController : StateMachine<PlayerController>
                 {
                     m.stamina = m.maxStamina;
                 }
-                m.gameUI.SetStaminaSlider(m.stamina);
+                UIManager.I.gameUI.SetStaminaSlider(m.stamina);
             }
         }
     }
@@ -285,7 +285,7 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if (m.input.actions["Attack"].WasPressedThisFrame())
+            if (GameManager.I.Input.actions["Attack"].WasPerformedThisFrame())
             {
                 m.ChangeState(new PlayerController.AttackState(m));
                 return;
@@ -316,7 +316,8 @@ public class PlayerController : StateMachine<PlayerController>
         {
             m.anim.SetTrigger("isDie");
             m.enabled = false;
-            MainManager.I.DiePlayer();
+            UIManager.I.loadPanel.SetActive(true);
+            SceneManager.LoadSceneAsync("Start");
         }
     }
 }

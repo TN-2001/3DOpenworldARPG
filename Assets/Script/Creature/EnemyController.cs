@@ -45,6 +45,11 @@ public class EnemyController : StateMachine<EnemyController>
         ChangeState(new IdleState(this));
     }
 
+    private void FixedUpdate()
+    {
+        OnUpdate();
+    }
+
     protected void AttackOn()
     {
         audioSource.PlayOneShot(attackSE);
@@ -229,7 +234,6 @@ public class EnemyController : StateMachine<EnemyController>
             m.anim.SetTrigger("isDie");
             m.enabled = false;
             Destroy(m.gameObject, 5);
-            MainManager.I.DieEnemy();
         }
     }
 }

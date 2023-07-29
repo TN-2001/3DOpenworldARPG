@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class StateMachine<T> : MonoBehaviour where T : StateMachine<T>
 {
-    private State<T> currentState;
-	private State<T> nextState;
+	// State変数
+    private State<T> currentState = null;
+	private State<T> nextState = null;
 
-	public void ChangeState(State<T> _nextState)
+	// Stateの遷移時に呼ぶ
+	protected void ChangeState(State<T> _nextState)
 	{
+		// 次のStateを保存
 		nextState = _nextState;
 	}
 
-	private void FixedUpdate()
+	// Stateを実行したい場所に呼ぶ
+	protected void OnUpdate()
 	{
+		// Stateを実行
 		if (currentState != null)
 		{
 			currentState.OnUpdate();
@@ -35,13 +40,16 @@ public class StateMachine<T> : MonoBehaviour where T : StateMachine<T>
 
 public class State<T> where T : StateMachine<T>
 {
-    protected T m;
+	// TはStateMachineの方
+    protected T m = null;
 
+	// 初期化
 	public State(T _m) 
     { 
         m = _m; 
     }
 
+	// 実行される関数
     public virtual void OnEnter(){}
     public virtual void OnUpdate(){}
     public virtual void OnExit(){}

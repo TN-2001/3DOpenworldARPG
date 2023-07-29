@@ -11,12 +11,39 @@ public class GameUI : MonoBehaviour
     [SerializeField]
     private Slider staminaSlider = null;
     [SerializeField]
-    private GameObject MobileController = null;
+    private GameObject mobileController = null;
 
-    private void Awake()
+    private void OnEnable()
+    {
+        GameManager.I.Input.actions.FindActionMap("Game").Enable();
+    }
+
+    private void Start()
     {
         // スマホプレイか確認し、MobileControllerのOnOff
-        MobileController.SetActive(true);
+        if(UnityEngine.Device.Application.isMobilePlatform)
+        {
+            mobileController.SetActive(true);
+        }
+        else
+        {
+            mobileController.SetActive(false);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if(GameManager.I.Input.actions["Menu"].WasPerformedThisFrame())
+        {
+            // MenuUIに遷移
+            gameObject.SetActive(false);
+            UIManager.I.menuUI.gameObject.SetActive(true);
+        }
+    }
+
+    private void OnDisable()
+    {
+        GameManager.I.Input.actions.FindActionMap("Game").Disable();
     }
 
     // HPSliderの初期化
@@ -37,6 +64,7 @@ public class GameUI : MonoBehaviour
         staminaSlider.maxValue = _maxStamina;
         staminaSlider.value = _maxStamina;
     }
+    // StaminaSliderの変化
     public void SetStaminaSlider(float _stamina)
     {
         staminaSlider.value = _stamina;
