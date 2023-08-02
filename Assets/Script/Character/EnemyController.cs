@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : StateMachine<EnemyController>
+public class EnemyController : StateMachine<EnemyController>, IBattler
 {
     private Animator anim;
     private NavMeshAgent nav;
@@ -14,7 +14,6 @@ public class EnemyController : StateMachine<EnemyController>
     protected float speed;
     [SerializeField]
     protected Attack attack;
-    private Collider attackCollider;
     [SerializeField]
     private Transform target;//敵
     private float distance;
@@ -39,8 +38,6 @@ public class EnemyController : StateMachine<EnemyController>
 
         nav.speed = speed;
         anim = GetComponent<Animator>();
-        attack.Initialize(gameObject);
-        attackCollider = attack.gameObject.GetComponent<Collider>();
 
         ChangeState(new IdleState(this));
     }
@@ -53,12 +50,12 @@ public class EnemyController : StateMachine<EnemyController>
     protected void AttackOn()
     {
         audioSource.PlayOneShot(attackSE);
-        attackCollider.enabled = true;
+        attack.GetComponent<Collider>().enabled = true;
     }
     
     protected void AttackOff()
     {
-        attackCollider.enabled = false;
+        attack.GetComponent<Collider>().enabled = false;
     }
 
     private void OnExitAttack()
@@ -67,7 +64,12 @@ public class EnemyController : StateMachine<EnemyController>
         ChangeState(new IdleState(this));
     }
 
-    public void OnDamage(int damage)
+    private void OnExitDamage()
+    {
+        ChangeState(new IdleState(this));
+    }
+
+    public void Damage(int damage)
     {
         audioSource.PlayOneShot(hitSE);
         hp -= damage;
@@ -81,12 +83,6 @@ public class EnemyController : StateMachine<EnemyController>
             ChangeState(new DamegeState(this));
         }
     }
-
-    private void OnExitDamage()
-    {
-        ChangeState(new IdleState(this));
-    }
-
 
     private class IdleState : State<EnemyController>
     {

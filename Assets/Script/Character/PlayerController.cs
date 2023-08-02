@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : StateMachine<PlayerController>
+public class PlayerController : StateMachine<PlayerController>, IBattler
 {
     // コンポーネント
     private Animator anim = null;
@@ -32,16 +32,12 @@ public class PlayerController : StateMachine<PlayerController>
     private AudioClip attackSE;
     [SerializeField]
     private Attack attack;
-    private Collider attackCollider;
-
 
     private void Start()
     {
+        // コンポーネント取得
         anim = GetComponent<Animator>();
         con = GetComponent<CharacterController>();
-
-        attack.Initialize(gameObject);
-        attackCollider = attack.gameObject.GetComponent<Collider>();
 
         UIManager.I.gameUI.InitialzeHpSlider(hp);
         maxStamina = stamina;
@@ -62,13 +58,13 @@ public class PlayerController : StateMachine<PlayerController>
 
     private void AttackOn()
     {
-        attackCollider.enabled = true;
+        attack.GetComponent<Collider>().enabled = true;
         audioSource.PlayOneShot(attackSE);
     }
     
     private void AttackOff()
     {
-        attackCollider.enabled = false;
+        attack.GetComponent<Collider>().enabled = false;
     }
 
     private void OnExitAttack()
@@ -76,7 +72,7 @@ public class PlayerController : StateMachine<PlayerController>
         ChangeState(new IdleState(this));
     }
 
-    public void OnDamage(int damage)
+    public void Damage(int damage)
     {
         if (isInvincible)
         {
