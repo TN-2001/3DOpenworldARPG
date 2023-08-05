@@ -1699,6 +1699,7 @@ GameObject:
   - component: {fileID: 515268342}
   - component: {fileID: 515268341}
   - component: {fileID: 515268339}
+  - component: {fileID: 515268343}
   m_Layer: 5
   m_Name: Toggle
   m_TagString: Untagged
@@ -1723,10 +1724,10 @@ RectTransform:
   m_Father: {fileID: 1260024215}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 75, y: -75}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &515268339
 MonoBehaviour:
@@ -1826,6 +1827,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 515268337}
   m_CullTransparentMesh: 1
+--- !u!114 &515268343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515268337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f62d81740e3ebd4a851dcfdd4da6085, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textList: []
+  imageList:
+  - {fileID: 1630086779}
 --- !u!1001 &580146470
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3875,6 +3891,7 @@ GameObject:
   - component: {fileID: 1111475122}
   - component: {fileID: 1111475124}
   - component: {fileID: 1111475123}
+  - component: {fileID: 1111475125}
   m_Layer: 5
   m_Name: ExplainView
   m_TagString: Untagged
@@ -3943,6 +3960,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1111475121}
   m_CullTransparentMesh: 1
+--- !u!114 &1111475125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111475121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f62d81740e3ebd4a851dcfdd4da6085, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textList:
+  - {fileID: 1580006039}
+  - {fileID: 482477779}
+  imageList:
+  - {fileID: 982215102}
 --- !u!1001 &1134155047
 PrefabInstance:
   m_ObjectHideFlags: 0
