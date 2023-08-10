@@ -36,7 +36,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattler
     private void Start()
     {
         // コンポーネント取得
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         con = GetComponent<CharacterController>();
 
         UIManager.I.gameUI.InitialzeHpSlider(hp);
